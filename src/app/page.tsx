@@ -9,8 +9,8 @@ export default function Home() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-[#4d352a]">Find your next book</h1>
-        <p className="text-[#aa8a6e] text-sm mt-1">Search and add books to your reading list.</p>
+        <h1 className="text-2xl font-bold text-[#4d352a] dark:text-[#e8ddd8]">Find your next book</h1>
+        <p className="text-[#aa8a6e] dark:text-[#957060] text-sm mt-1">Search and add books to your reading list.</p>
       </div>
       <BookSearch
         savedBooks={userBooks}

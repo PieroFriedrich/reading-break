@@ -64,10 +64,10 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a book…"
-          className="w-full px-4 py-3 rounded-xl border border-[#ddd0c4] shadow-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 text-base"
+          className="w-full px-4 py-3 rounded-xl border border-[#ddd0c4] dark:border-[#3a2820] shadow-sm bg-white dark:bg-[#251a14] text-gray-800 dark:text-[#e8ddd8] placeholder-gray-400 dark:placeholder-[#7a6055] focus:outline-none focus:ring-2 focus:ring-green-400 text-base"
         />
         {searching && (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#aa8a6e] text-sm">
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#aa8a6e] dark:text-[#957060] text-sm">
             Searching…
           </span>
         )}
@@ -92,13 +92,13 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
             </div>
           )}
           {!searching && results.length === 0 && !error && (
-            <p className="text-[#aa8a6e] text-sm text-center">No results found.</p>
+            <p className="text-[#aa8a6e] dark:text-[#957060] text-sm text-center">No results found.</p>
           )}
         </>
       ) : (
         trendingBooks.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-[#4d352a] flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-[#4d352a] dark:text-[#e8ddd8] flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
               Trending Now
             </h2>

@@ -19,7 +19,7 @@ export default function MyBooksPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[#4d352a]">My Books</h1>
+      <h1 className="text-2xl font-bold text-[#4d352a] dark:text-[#e8ddd8]">My Books</h1>
 
       <div className="flex gap-2 flex-wrap">
         {TABS.map((tab) => (
@@ -28,8 +28,8 @@ export default function MyBooksPage() {
             onClick={() => setActiveFilter(tab.value)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               activeFilter === tab.value
-                ? 'bg-[#8d6548] text-[#f0eae5]'
-                : 'bg-[#f0eae5] border border-[#ddd0c4] text-[#8d6548] hover:border-[#9a7559] hover:text-[#634636]'
+                ? 'bg-[#8d6548] dark:bg-[#5a3d2c] text-[#f0eae5]'
+                : 'bg-[#f0eae5] dark:bg-[#251a14] border border-[#ddd0c4] dark:border-[#3a2820] text-[#8d6548] dark:text-[#c5ae9b] hover:border-[#9a7559] hover:text-[#634636] dark:hover:text-[#e8ddd8]'
             }`}
           >
             {tab.label}
@@ -38,9 +38,9 @@ export default function MyBooksPage() {
       </div>
 
       {loading ? (
-        <p className="text-[#c5ae9b] text-sm">Loading…</p>
+        <p className="text-[#c5ae9b] dark:text-[#7a6055] text-sm">Loading…</p>
       ) : userBooks.length === 0 ? (
-        <p className="text-[#c5ae9b] text-sm">No books here yet.</p>
+        <p className="text-[#c5ae9b] dark:text-[#7a6055] text-sm">No books here yet.</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {userBooks.map((ub) => {

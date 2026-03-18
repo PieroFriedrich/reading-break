@@ -15,8 +15,8 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onRe
   const isSaved = !!savedBook;
 
   return (
-    <div className="flex flex-col bg-[#f0eae5] rounded-xl shadow-sm border border-[#ede3db] hover:shadow-md transition-shadow">
-      <div className="relative w-full h-52 bg-[#f7f2ef] flex items-center justify-center rounded-t-xl overflow-hidden">
+    <div className="flex flex-col bg-[#f0eae5] dark:bg-[#251a14] rounded-xl shadow-sm border border-[#ede3db] dark:border-[#3a2820] hover:shadow-md transition-shadow">
+      <div className="relative w-full h-52 bg-[#f7f2ef] dark:bg-[#1c1410] flex items-center justify-center rounded-t-xl overflow-hidden">
         {book.coverUrl ? (
           <Image
             src={book.coverUrl}
@@ -31,13 +31,13 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onRe
       </div>
 
       <div className="p-4 flex flex-col gap-2 flex-1">
-        <h3 className="font-semibold text-[#4d352a] text-sm leading-snug line-clamp-2">{book.title}</h3>
+        <h3 className="font-semibold text-[#4d352a] dark:text-[#e8ddd8] text-sm leading-snug line-clamp-2">{book.title}</h3>
 
         {book.author && (
-          <p className="text-xs text-[#9a7559] line-clamp-1">{book.author}</p>
+          <p className="text-xs text-[#9a7559] dark:text-[#b08060] line-clamp-1">{book.author}</p>
         )}
 
-        <div className="flex flex-wrap gap-1 text-xs text-[#c5ae9b]">
+        <div className="flex flex-wrap gap-1 text-xs text-[#c5ae9b] dark:text-[#7a6055]">
           {book.publisher && <span className="line-clamp-1">{book.publisher}</span>}
           {book.publisher && book.publishDate && <span>·</span>}
           {book.publishDate && <span>{book.publishDate}</span>}
