@@ -19,7 +19,7 @@ export default function MyBooksPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">My Books</h1>
+      <h1 className="text-2xl font-bold text-purple-900">My Books</h1>
 
       <div className="flex gap-2 flex-wrap">
         {TABS.map((tab) => (
@@ -28,8 +28,8 @@ export default function MyBooksPage() {
             onClick={() => setActiveFilter(tab.value)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               activeFilter === tab.value
-                ? 'bg-indigo-600 text-white'
-                : 'bg-white border border-gray-200 text-gray-600 hover:border-indigo-400 hover:text-indigo-600'
+                ? 'bg-purple-700 text-white'
+                : 'bg-white border border-purple-200 text-purple-600 hover:border-purple-500 hover:text-purple-800'
             }`}
           >
             {tab.label}
@@ -38,9 +38,9 @@ export default function MyBooksPage() {
       </div>
 
       {loading ? (
-        <p className="text-gray-400 text-sm">Loading…</p>
+        <p className="text-purple-300 text-sm">Loading…</p>
       ) : userBooks.length === 0 ? (
-        <p className="text-gray-400 text-sm">No books here yet.</p>
+        <p className="text-purple-300 text-sm">No books here yet.</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {userBooks.map((ub) => {

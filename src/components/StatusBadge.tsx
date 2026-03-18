@@ -1,10 +1,10 @@
 import type { ReadingStatus } from '@/lib/types';
 
 const styles: Record<ReadingStatus, string> = {
-  WISHLIST: 'bg-blue-100 text-blue-800',
-  READING: 'bg-yellow-100 text-yellow-800',
-  FINISHED: 'bg-green-100 text-green-800',
-  DROPPED: 'bg-gray-100 text-gray-600',
+  WISHLIST: 'bg-purple-100 text-purple-800',
+  READING: 'bg-green-100 text-green-800',
+  FINISHED: 'bg-emerald-100 text-emerald-800',
+  DROPPED: 'bg-gray-100 text-gray-500',
 };
 
 const labels: Record<ReadingStatus, string> = {

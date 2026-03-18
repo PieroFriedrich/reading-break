@@ -1,5 +1,21 @@
 import type { Book, OLSearchResponse } from './types';
 
+export async function getTrendingBooks(): Promise<Book[]> {
+  const url = 'https://openlibrary.org/trending/daily.json?limit=20';
+  const res = await fetch(url, { next: { revalidate: 3600 } });
+  if (!res.ok) throw new Error('Failed to fetch trending books');
+  const data = await res.json();
+  return data.works.map((doc: { key: string; title: string; author_name?: string[]; first_publish_year?: number; cover_i?: number }) => ({
+    id: doc.key,
+    title: doc.title,
+    author: doc.author_name?.[0],
+    publishDate: doc.first_publish_year?.toString(),
+    coverUrl: doc.cover_i
+      ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+      : undefined,
+  }));
+}
+
 export async function searchBooks(query: string): Promise<Book[]> {
   const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,publisher,first_publish_year,cover_i`;
 

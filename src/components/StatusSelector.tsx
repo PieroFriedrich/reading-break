@@ -18,7 +18,7 @@ export default function StatusSelector({ value, onChange, placeholder }: Props) 
     <select
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value as ReadingStatus)}
-      className="text-sm border border-gray-300 rounded px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400"
+      className="text-sm border border-purple-200 rounded px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
     >
       {placeholder && (
         <option value="" disabled>

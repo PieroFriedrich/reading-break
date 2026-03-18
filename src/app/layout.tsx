@@ -13,15 +13,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${geist.className} bg-gray-50 min-h-screen`}>
-        <header className="bg-white border-b border-gray-100 shadow-sm">
+      <body className={`${geist.className} bg-purple-50 min-h-screen`}>
+        <header className="bg-purple-900 border-b border-purple-800 shadow-sm">
           <nav className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-            <Link href="/" className="font-bold text-indigo-600 text-lg tracking-tight">
+            <Link href="/" className="font-bold text-white text-lg tracking-tight">
               Reading Break
             </Link>
             <Link
               href="/my-books"
-              className="text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors"
+              className="text-sm font-medium text-purple-200 hover:text-white transition-colors"
             >
               My Books
             </Link>

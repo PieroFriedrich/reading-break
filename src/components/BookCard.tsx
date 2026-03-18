@@ -15,8 +15,8 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onRe
   const isSaved = !!savedBook;
 
   return (
-    <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-      <div className="relative w-full h-52 bg-gray-100 flex items-center justify-center">
+    <div className="flex flex-col bg-white rounded-xl shadow-sm border border-purple-100 overflow-hidden hover:shadow-md transition-shadow">
+      <div className="relative w-full h-52 bg-purple-50 flex items-center justify-center">
         {book.coverUrl ? (
           <Image
             src={book.coverUrl}
@@ -31,13 +31,13 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onRe
       </div>
 
       <div className="p-4 flex flex-col gap-2 flex-1">
-        <h3 className="font-semibold text-gray-900 text-sm leading-snug line-clamp-2">{book.title}</h3>
+        <h3 className="font-semibold text-purple-900 text-sm leading-snug line-clamp-2">{book.title}</h3>
 
         {book.author && (
-          <p className="text-xs text-gray-500 line-clamp-1">{book.author}</p>
+          <p className="text-xs text-purple-500 line-clamp-1">{book.author}</p>
         )}
 
-        <div className="flex flex-wrap gap-1 text-xs text-gray-400">
+        <div className="flex flex-wrap gap-1 text-xs text-purple-300">
           {book.publisher && <span className="line-clamp-1">{book.publisher}</span>}
           {book.publisher && book.publishDate && <span>·</span>}
           {book.publishDate && <span>{book.publishDate}</span>}
@@ -50,7 +50,7 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onRe
                 <StatusBadge status={savedBook.status} />
                 <button
                   onClick={() => onRemove(book.id)}
-                  className="text-xs text-red-400 hover:text-red-600 transition-colors"
+                  className="text-xs text-green-600 hover:text-green-800 transition-colors"
                 >
                   Remove
                 </button>
