@@ -15,8 +15,8 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onRe
   const isSaved = !!savedBook;
 
   return (
-    <div className="flex flex-col bg-white rounded-xl shadow-sm border border-purple-100 overflow-hidden hover:shadow-md transition-shadow">
-      <div className="relative w-full h-52 bg-purple-50 flex items-center justify-center">
+    <div className="flex flex-col bg-white rounded-xl shadow-sm border border-purple-100 hover:shadow-md transition-shadow">
+      <div className="relative w-full h-52 bg-purple-50 flex items-center justify-center rounded-t-xl overflow-hidden">
         {book.coverUrl ? (
           <Image
             src={book.coverUrl}
