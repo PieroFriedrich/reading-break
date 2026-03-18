@@ -1,7 +1,7 @@
 import type { ReadingStatus } from '@/lib/types';
 
 const styles: Record<ReadingStatus, string> = {
-  WISHLIST: 'bg-purple-100 text-purple-800',
+  WISHLIST: 'bg-[#ede3db] text-[#634636]',
   READING: 'bg-green-100 text-green-800',
   FINISHED: 'bg-emerald-100 text-emerald-800',
   DROPPED: 'bg-gray-100 text-gray-500',

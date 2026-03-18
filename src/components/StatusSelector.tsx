@@ -13,7 +13,7 @@ const statuses: { value: ReadingStatus; label: string }[] = [
 // Background when status is actively selected
 const selectedStyles: Record<ReadingStatus, string> = {
   WISHLIST: 'bg-pink-200 text-pink-900 border-pink-300',
-  READING:  'bg-purple-200 text-purple-900 border-purple-300',
+  READING:  'bg-[#ddd0c4] text-[#4d352a] border-[#c5ae9b]',
   FINISHED: 'bg-green-200 text-green-900 border-green-300',
   DROPPED:  'bg-gray-200 text-gray-700 border-gray-300',
 };
@@ -21,7 +21,7 @@ const selectedStyles: Record<ReadingStatus, string> = {
 // Hover background for each option in the dropdown (lighter/lower opacity)
 const hoverStyles: Record<ReadingStatus, string> = {
   WISHLIST: 'hover:bg-pink-100',
-  READING:  'hover:bg-purple-100',
+  READING:  'hover:bg-[#ede3db]',
   FINISHED: 'hover:bg-green-100',
   DROPPED:  'hover:bg-gray-100',
 };
@@ -54,7 +54,7 @@ export default function StatusSelector({ value, onChange, placeholder }: Props) 
         className={`w-full flex items-center justify-between gap-1 px-2 py-1 rounded border transition-colors focus:outline-none focus:ring-2 focus:ring-green-400 ${
           value
             ? selectedStyles[value]
-            : 'bg-white border-purple-200 text-purple-400'
+            : 'bg-[#f0eae5] border-[#ddd0c4] text-[#aa8a6e]'
         }`}
       >
         <span>{selected?.label ?? placeholder ?? 'Add to list…'}</span>
@@ -70,14 +70,14 @@ export default function StatusSelector({ value, onChange, placeholder }: Props) 
       </button>
 
       {open && (
-        <div className="absolute z-20 mt-1 w-full bg-white border border-purple-100 rounded shadow-lg overflow-hidden">
+        <div className="absolute z-20 mt-1 w-full bg-[#f0eae5] border border-[#ede3db] rounded shadow-lg overflow-hidden">
           {statuses.map((s) => (
             <button
               key={s.value}
               type="button"
               onClick={() => { onChange(s.value); setOpen(false); }}
               className={`w-full text-left px-2 py-1.5 transition-colors duration-150 ${hoverStyles[s.value]} ${
-                s.value === value ? selectedStyles[s.value] : 'text-purple-800'
+                s.value === value ? selectedStyles[s.value] : 'text-[#634636]'
               }`}
             >
               {s.label}
