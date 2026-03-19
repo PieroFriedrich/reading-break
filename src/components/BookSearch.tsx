@@ -17,6 +17,7 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
   const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
+  const [loadingTrending, setLoadingTrending] = useState(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const savedMap = new Map(savedBooks.map((b) => [b.bookId, b]));
@@ -24,8 +25,11 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
   useEffect(() => {
     fetch('/api/books/trending')
       .then((r) => r.json())
-      .then((data) => setTrendingBooks(data.books ?? []))
-      .catch(() => {});
+      .then((data) => {
+        setTrendingBooks(data.books ?? []);
+        setLoadingTrending(false);
+      })
+      .catch(() => { setLoadingTrending(false); });
   }, []);
 
   useEffect(() => {
@@ -95,6 +99,8 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
             <p className="text-[#aa8a6e] dark:text-[#957060] text-sm text-center">No results found.</p>
           )}
         </>
+      ) : loadingTrending ? (
+        <p className="text-[#aa8a6e] dark:text-[#957060] text-sm">retrieving books...</p>
       ) : (
         trendingBooks.length > 0 && (
           <div className="space-y-4">
