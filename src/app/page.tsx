@@ -1,15 +1,17 @@
 'use client';
 
 import BookSearch from '@/components/BookSearch';
+import WelcomeCard from '@/components/WelcomeCard';
 import { useUserBooks } from '@/hooks/useUserBooks';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Home() {
   const { userBooks, saveBook, updateStatus, removeBook } = useUserBooks();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   return (
     <div className="space-y-6">
+      <WelcomeCard show={!user && !authLoading} />
       <div>
         <h1 className="text-2xl font-bold text-[#4d352a] dark:text-[#e8ddd8]">
           {user ? `Find your next book, ${user.username}` : 'Find your next book'}
