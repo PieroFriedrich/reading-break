@@ -13,12 +13,13 @@ const STATUS_TABS: { label: string; value: ReadingStatus | undefined }[] = [
   { label: 'Dropped', value: 'DROPPED' },
 ];
 
-type SortBy = 'date_added' | 'title' | 'author';
+type SortBy = 'date_added' | 'title' | 'author' | 'rating';
 
 function sortBooks(books: UserBook[], sortBy: SortBy): UserBook[] {
   return [...books].sort((a, b) => {
     if (sortBy === 'title') return a.bookTitle.localeCompare(b.bookTitle);
     if (sortBy === 'author') return (a.bookAuthor ?? '').localeCompare(b.bookAuthor ?? '');
+    if (sortBy === 'rating') return (b.rating ?? 0) - (a.rating ?? 0);
     return b.createdAt.localeCompare(a.createdAt); // date_added desc
   });
 }
@@ -73,6 +74,7 @@ export default function MyBooksPage() {
           <option value="date_added">Date added</option>
           <option value="title">Title</option>
           <option value="author">Author</option>
+          <option value="rating">Highest rating</option>
         </select>
       </div>
 
