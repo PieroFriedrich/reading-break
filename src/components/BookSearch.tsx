@@ -8,10 +8,12 @@ interface Props {
   savedBooks: UserBook[];
   onSave: (book: Book, status: ReadingStatus) => void;
   onUpdateStatus: (bookId: string, status: ReadingStatus) => void;
+  onUpdateRating: (bookId: string, rating: number | null) => void;
+  onUpdateProgress: (bookId: string, pages: number | null) => void;
   onRemove: (bookId: string) => void;
 }
 
-export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemove }: Props) {
+export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onRemove }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Book[]>([]);
   const [searching, setSearching] = useState(false);
@@ -90,6 +92,8 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
                   savedBook={savedMap.get(book.id)}
                   onSave={onSave}
                   onUpdateStatus={onUpdateStatus}
+                  onUpdateRating={onUpdateRating}
+                  onUpdateProgress={onUpdateProgress}
                   onRemove={onRemove}
                 />
               ))}
@@ -116,6 +120,8 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onRemov
                   savedBook={savedMap.get(book.id)}
                   onSave={onSave}
                   onUpdateStatus={onUpdateStatus}
+                  onUpdateRating={onUpdateRating}
+                  onUpdateProgress={onUpdateProgress}
                   onRemove={onRemove}
                 />
               ))}

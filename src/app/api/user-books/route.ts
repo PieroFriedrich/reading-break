@@ -13,6 +13,8 @@ interface DbRow {
   book_publisher: string | null;
   book_publish_date: string | null;
   status: string;
+  rating: number | null;
+  reading_progress: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -28,6 +30,8 @@ function rowToUserBook(row: DbRow): UserBook {
     bookPublisher: row.book_publisher ?? undefined,
     bookPublishDate: row.book_publish_date ?? undefined,
     status: row.status as ReadingStatus,
+    rating: row.rating ?? undefined,
+    readingProgress: row.reading_progress ?? undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

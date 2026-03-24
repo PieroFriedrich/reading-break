@@ -11,6 +11,10 @@ if (process.env.NODE_ENV !== 'production') globalForDb.db = db;
 
 db.pragma('journal_mode = WAL');
 
+// Migrations — safe to run on every startup
+try { db.exec('ALTER TABLE user_books ADD COLUMN rating INTEGER'); } catch {}
+try { db.exec('ALTER TABLE user_books ADD COLUMN reading_progress INTEGER'); } catch {}
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS user_books (
     id               TEXT PRIMARY KEY,

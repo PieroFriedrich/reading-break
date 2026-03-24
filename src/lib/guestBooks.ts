@@ -49,6 +49,20 @@ export function updateGuestBookStatus(bookId: string, status: ReadingStatus): vo
   saveGuestBooks(books);
 }
 
+export function updateGuestBookRating(bookId: string, rating: number | null): void {
+  const books = getGuestBooks().map((b) =>
+    b.bookId === bookId ? { ...b, rating: rating ?? undefined, updatedAt: new Date().toISOString() } : b
+  );
+  saveGuestBooks(books);
+}
+
+export function updateGuestBookProgress(bookId: string, pages: number | null): void {
+  const books = getGuestBooks().map((b) =>
+    b.bookId === bookId ? { ...b, readingProgress: pages ?? undefined, updatedAt: new Date().toISOString() } : b
+  );
+  saveGuestBooks(books);
+}
+
 export function removeGuestBook(bookId: string): void {
   saveGuestBooks(getGuestBooks().filter((b) => b.bookId !== bookId));
 }
