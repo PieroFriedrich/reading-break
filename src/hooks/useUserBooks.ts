@@ -2,51 +2,85 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  getGuestBooks,
+  addGuestBook,
+  updateGuestBookStatus,
+  removeGuestBook,
+} from '@/lib/guestBooks';
 
 export function useUserBooks(statusFilter?: ReadingStatus) {
+  const { user, loading: authLoading } = useAuth();
   const [userBooks, setUserBooks] = useState<UserBook[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchBooks = useCallback(async () => {
-    const url = statusFilter
-      ? `/api/user-books?status=${statusFilter}`
-      : '/api/user-books';
-    const res = await fetch(url);
-    const data = await res.json();
-    setUserBooks(data.books);
+    if (user) {
+      const url = statusFilter ? `/api/user-books?status=${statusFilter}` : '/api/user-books';
+      const res = await fetch(url);
+      const data = await res.json();
+      setUserBooks(data.books ?? []);
+    } else {
+      const books = getGuestBooks();
+      setUserBooks(statusFilter ? books.filter((b) => b.status === statusFilter) : books);
+    }
     setLoading(false);
-  }, [statusFilter]);
+  }, [user, statusFilter]);
 
   useEffect(() => {
-    fetchBooks();
-  }, [fetchBooks]);
+    if (!authLoading) fetchBooks();
+  }, [authLoading, fetchBooks]);
 
-  const saveBook = useCallback(async (book: Book, status: ReadingStatus) => {
-    await fetch('/api/user-books', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ book, status }),
-    });
-    await fetchBooks();
-  }, [fetchBooks]);
+  const saveBook = useCallback(
+    async (book: Book, status: ReadingStatus) => {
+      if (user) {
+        await fetch('/api/user-books', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ book, status }),
+        });
+        await fetchBooks();
+      } else {
+        const newBook = addGuestBook(book, status);
+        setUserBooks((prev) => {
+          const exists = prev.find((b) => b.bookId === book.id);
+          return exists
+            ? prev.map((b) => (b.bookId === book.id ? newBook : b))
+            : [...prev, newBook];
+        });
+      }
+    },
+    [user, fetchBooks]
+  );
 
-  const updateStatus = useCallback(async (bookId: string, status: ReadingStatus) => {
-    setUserBooks((prev) =>
-      prev.map((b) => (b.bookId === bookId ? { ...b, status } : b))
-    );
-    await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
-  }, []);
+  const updateStatus = useCallback(
+    async (bookId: string, status: ReadingStatus) => {
+      setUserBooks((prev) => prev.map((b) => (b.bookId === bookId ? { ...b, status } : b)));
+      if (user) {
+        await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status }),
+        });
+      } else {
+        updateGuestBookStatus(bookId, status);
+      }
+    },
+    [user]
+  );
 
-  const removeBook = useCallback(async (bookId: string) => {
-    setUserBooks((prev) => prev.filter((b) => b.bookId !== bookId));
-    await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, {
-      method: 'DELETE',
-    });
-  }, []);
+  const removeBook = useCallback(
+    async (bookId: string) => {
+      setUserBooks((prev) => prev.filter((b) => b.bookId !== bookId));
+      if (user) {
+        await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, { method: 'DELETE' });
+      } else {
+        removeGuestBook(bookId);
+      }
+    },
+    [user]
+  );
 
-  return { userBooks, loading, saveBook, updateStatus, removeBook };
+  return { userBooks, loading: authLoading || loading, saveBook, updateStatus, removeBook };
 }
