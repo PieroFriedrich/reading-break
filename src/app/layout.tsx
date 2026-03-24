@@ -17,8 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}})();` }} />
       </head>
-      <body className={`${geist.className} bg-[#f7f2ef] dark:bg-[#1c1410] min-h-screen`}>
-        <header className="bg-[#8d6548] dark:bg-[#3d2416] border-b border-[#7a5540] dark:border-[#5a3020] shadow-sm">
+      <body className={`${geist.className} min-h-screen flex flex-col`}>
+        <header className="bg-[#8d6548] border-b border-[#7a5540] shadow-sm">
           <nav className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 font-bold text-[#f0eae5] text-lg tracking-tight">
               <img src="/reading-break-logo.svg" alt="Reading Break logo" height={32} width={32} />
@@ -35,7 +35,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </nav>
         </header>
-        <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+        <div className="bg-[#f7f2ef] dark:bg-[#1c1410] flex-1">
+          <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
+        </div>
       </body>
     </html>
   );
