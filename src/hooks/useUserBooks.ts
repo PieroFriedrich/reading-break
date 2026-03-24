@@ -7,6 +7,8 @@ import {
   getGuestBooks,
   addGuestBook,
   updateGuestBookStatus,
+  updateGuestBookRating,
+  updateGuestBookProgress,
   removeGuestBook,
 } from '@/lib/guestBooks';
 
@@ -70,6 +72,38 @@ export function useUserBooks(statusFilter?: ReadingStatus) {
     [user]
   );
 
+  const updateRating = useCallback(
+    async (bookId: string, rating: number | null) => {
+      setUserBooks((prev) => prev.map((b) => (b.bookId === bookId ? { ...b, rating: rating ?? undefined } : b)));
+      if (user) {
+        await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ rating }),
+        });
+      } else {
+        updateGuestBookRating(bookId, rating);
+      }
+    },
+    [user]
+  );
+
+  const updateProgress = useCallback(
+    async (bookId: string, pages: number | null) => {
+      setUserBooks((prev) => prev.map((b) => (b.bookId === bookId ? { ...b, readingProgress: pages ?? undefined } : b)));
+      if (user) {
+        await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ readingProgress: pages }),
+        });
+      } else {
+        updateGuestBookProgress(bookId, pages);
+      }
+    },
+    [user]
+  );
+
   const removeBook = useCallback(
     async (bookId: string) => {
       setUserBooks((prev) => prev.filter((b) => b.bookId !== bookId));
@@ -82,5 +116,5 @@ export function useUserBooks(statusFilter?: ReadingStatus) {
     [user]
   );
 
-  return { userBooks, loading: authLoading || loading, saveBook, updateStatus, removeBook };
+  return { userBooks, loading: authLoading || loading, saveBook, updateStatus, updateRating, updateProgress, removeBook };
 }

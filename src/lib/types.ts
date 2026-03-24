@@ -32,6 +32,8 @@ export interface UserBook {
   bookPublisher?: string;
   bookPublishDate?: string;
   status: ReadingStatus;
+  rating?: number;
+  readingProgress?: number;
   createdAt: string;
   updatedAt: string;
 }
