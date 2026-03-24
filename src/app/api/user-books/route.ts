@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
+import { validateRequest } from '@/lib/auth';
 import type { ReadingStatus, UserBook } from '@/lib/types';
-
-const USER_ID = 'guest';
 
 interface DbRow {
   id: string;
@@ -35,25 +34,33 @@ function rowToUserBook(row: DbRow): UserBook {
 }
 
 export async function GET(request: NextRequest) {
-  const status = request.nextUrl.searchParams.get('status');
+  const user = validateRequest(request);
+  if (!user) return NextResponse.json({ books: [] });
 
+  const status = request.nextUrl.searchParams.get('status');
   let rows: DbRow[];
   if (status) {
     rows = db
       .prepare('SELECT * FROM user_books WHERE user_id = ? AND status = ? ORDER BY updated_at DESC')
-      .all(USER_ID, status) as DbRow[];
+      .all(user.id, status) as DbRow[];
   } else {
     rows = db
       .prepare('SELECT * FROM user_books WHERE user_id = ? ORDER BY updated_at DESC')
-      .all(USER_ID) as DbRow[];
+      .all(user.id) as DbRow[];
   }
 
   return NextResponse.json({ books: rows.map(rowToUserBook) });
 }
 
 export async function POST(request: NextRequest) {
+  const user = validateRequest(request);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const body = await request.json();
-  const { book, status } = body as { book: { id: string; title: string; author?: string; publisher?: string; publishDate?: string; coverUrl?: string }; status: ReadingStatus };
+  const { book, status } = body as {
+    book: { id: string; title: string; author?: string; publisher?: string; publishDate?: string; coverUrl?: string };
+    status: ReadingStatus;
+  };
 
   const id = crypto.randomUUID();
 
@@ -68,11 +75,11 @@ export async function POST(request: NextRequest) {
       book_publisher = excluded.book_publisher,
       book_publish_date = excluded.book_publish_date,
       updated_at = datetime('now')
-  `).run(id, USER_ID, book.id, book.title, book.coverUrl ?? null, book.author ?? null, book.publisher ?? null, book.publishDate ?? null, status);
+  `).run(id, user.id, book.id, book.title, book.coverUrl ?? null, book.author ?? null, book.publisher ?? null, book.publishDate ?? null, status);
 
   const row = db
     .prepare('SELECT * FROM user_books WHERE user_id = ? AND book_id = ?')
-    .get(USER_ID, book.id) as DbRow;
+    .get(user.id, book.id) as DbRow;
 
   return NextResponse.json({ book: rowToUserBook(row) }, { status: 201 });
 }

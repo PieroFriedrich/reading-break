@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
+import { validateRequest } from '@/lib/auth';
 import type { ReadingStatus } from '@/lib/types';
-
-const USER_ID = 'guest';
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ bookId: string }> }
 ) {
+  const user = validateRequest(request);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { bookId } = await params;
   const decodedBookId = decodeURIComponent(bookId);
   const { status } = (await request.json()) as { status: ReadingStatus };
@@ -16,7 +18,7 @@ export async function PATCH(
     .prepare(
       "UPDATE user_books SET status = ?, updated_at = datetime('now') WHERE user_id = ? AND book_id = ?"
     )
-    .run(status, USER_ID, decodedBookId);
+    .run(status, user.id, decodedBookId);
 
   if (result.changes === 0) {
     return NextResponse.json({ error: 'Book not found' }, { status: 404 });
@@ -26,14 +28,17 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ bookId: string }> }
 ) {
+  const user = validateRequest(request);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { bookId } = await params;
   const decodedBookId = decodeURIComponent(bookId);
 
   db.prepare('DELETE FROM user_books WHERE user_id = ? AND book_id = ?').run(
-    USER_ID,
+    user.id,
     decodedBookId
   );
 
