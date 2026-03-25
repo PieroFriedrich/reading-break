@@ -1,4 +1,4 @@
-import type { Book, OLSearchResponse } from './types';
+import type { Book, BookDetail, OLSearchResponse } from './types';
 
 export async function getTrendingBooks(): Promise<Book[]> {
   const url = 'https://openlibrary.org/trending/daily.json?limit=20';
@@ -14,6 +14,49 @@ export async function getTrendingBooks(): Promise<Book[]> {
       ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
       : undefined,
   }));
+}
+
+export async function getBookDetail(workId: string): Promise<BookDetail | null> {
+  try {
+    const workRes = await fetch(`https://openlibrary.org/works/${workId}.json`, {
+      next: { revalidate: 86400 },
+    });
+    if (!workRes.ok) return null;
+    const data = await workRes.json();
+
+    let author: string | undefined;
+    const authorKey = data.authors?.[0]?.author?.key;
+    if (authorKey) {
+      const authorRes = await fetch(`https://openlibrary.org${authorKey}.json`, {
+        next: { revalidate: 86400 },
+      });
+      if (authorRes.ok) {
+        const authorData = await authorRes.json();
+        author = authorData.name;
+      }
+    }
+
+    const description =
+      typeof data.description === 'string'
+        ? data.description
+        : data.description?.value;
+
+    const coverUrl = data.covers?.[0]
+      ? `https://covers.openlibrary.org/b/id/${data.covers[0]}-L.jpg`
+      : `https://covers.openlibrary.org/b/olid/${workId}-L.jpg`;
+
+    return {
+      id: `/works/${workId}`,
+      title: data.title,
+      author,
+      coverUrl,
+      description,
+      subjects: data.subjects?.slice(0, 20),
+      firstPublishDate: data.first_publish_date,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function searchBooks(query: string): Promise<Book[]> {

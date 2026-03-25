@@ -1,6 +1,6 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
-import StatusBadge from './StatusBadge';
 import StatusSelector from './StatusSelector';
 
 interface Props {
@@ -40,10 +40,11 @@ function StarRating({
 
 export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onRemove }: Props) {
   const isSaved = !!savedBook;
+  const bookPageUrl = `/books/${book.id.replace('/works/', '')}`;
 
   return (
     <div className="flex flex-col bg-[#f0eae5] dark:bg-[#8d6548] rounded-xl shadow-sm border border-[#ede3db] dark:border-[#7a5540] hover:shadow-md transition-shadow">
-      <div className="relative w-full h-52 bg-[#f7f2ef] dark:bg-[#1c1410] flex items-center justify-center rounded-t-xl overflow-hidden">
+      <Link href={bookPageUrl} className="relative block w-full h-52 bg-[#f7f2ef] dark:bg-[#1c1410] flex items-center justify-center rounded-t-xl overflow-hidden">
         {book.coverUrl ? (
           <Image
             src={book.coverUrl}
@@ -55,26 +56,27 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
         ) : (
           <span className="text-4xl text-gray-300">📖</span>
         )}
-      </div>
+      </Link>
 
       <div className="p-4 flex flex-col gap-2 flex-1">
-        <h3 className="font-semibold text-[#4d352a] dark:text-[#f0eae5] text-sm leading-snug line-clamp-2">{book.title}</h3>
+        <Link href={bookPageUrl} className="block">
+          <h3 className="font-semibold text-[#4d352a] dark:text-[#f0eae5] text-sm leading-snug line-clamp-2 hover:underline">{book.title}</h3>
 
-        {book.author && (
-          <p className="text-xs text-[#9a7559] dark:text-[#e0d4cc] line-clamp-1">{book.author}</p>
-        )}
+          {book.author && (
+            <p className="text-xs text-[#9a7559] dark:text-[#e0d4cc] line-clamp-1 mt-1">{book.author}</p>
+          )}
 
-        <div className="flex flex-wrap gap-1 text-xs text-[#c5ae9b] dark:text-[#c5ae9b]">
-          {book.publisher && <span className="line-clamp-1">{book.publisher}</span>}
-          {book.publisher && book.publishDate && <span>·</span>}
-          {book.publishDate && <span>{book.publishDate}</span>}
-        </div>
+          <div className="flex flex-wrap gap-1 text-xs text-[#c5ae9b] dark:text-[#c5ae9b] mt-1">
+            {book.publisher && <span className="line-clamp-1">{book.publisher}</span>}
+            {book.publisher && book.publishDate && <span>·</span>}
+            {book.publishDate && <span>{book.publishDate}</span>}
+          </div>
+        </Link>
 
         <div className="mt-auto pt-2 flex flex-col gap-2">
           {isSaved ? (
             <>
-              <div className="flex items-center justify-between">
-                <StatusBadge status={savedBook.status} />
+              <div className="flex justify-end">
                 <button
                   onClick={() => onRemove(book.id)}
                   className="text-xs text-green-600 hover:text-green-800 transition-colors"

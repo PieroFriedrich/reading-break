@@ -20,6 +20,12 @@ export interface Book {
   coverUrl?: string;
 }
 
+export interface BookDetail extends Book {
+  description?: string;
+  subjects?: string[];
+  firstPublishDate?: string;
+}
+
 export type ReadingStatus = 'WISHLIST' | 'READING' | 'FINISHED' | 'DROPPED';
 
 export interface UserBook {
