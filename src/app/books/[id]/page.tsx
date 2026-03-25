@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getBookDetail } from '@/lib/openLibrary';
 import BookDetailActions from '@/components/BookDetailActions';
+import BookRecommendations from '@/components/BookRecommendations';
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -79,6 +80,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
           </div>
         </div>
       )}
+      <BookRecommendations subjects={book.subjects ?? []} author={book.author} currentBookId={book.id} />
     </div>
   );
 }
