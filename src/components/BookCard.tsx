@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
-import StatusBadge from './StatusBadge';
 import StatusSelector from './StatusSelector';
 
 interface Props {
@@ -77,8 +76,7 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
         <div className="mt-auto pt-2 flex flex-col gap-2">
           {isSaved ? (
             <>
-              <div className="flex items-center justify-between">
-                <StatusBadge status={savedBook.status} />
+              <div className="flex justify-end">
                 <button
                   onClick={() => onRemove(book.id)}
                   className="text-xs text-green-600 hover:text-green-800 transition-colors"

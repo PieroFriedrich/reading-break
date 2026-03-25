@@ -2,7 +2,6 @@
 
 import type { Book, ReadingStatus } from '@/lib/types';
 import { useUserBooks } from '@/hooks/useUserBooks';
-import StatusBadge from './StatusBadge';
 import StatusSelector from './StatusSelector';
 
 function StarRating({ rating, onRate }: { rating?: number; onRate: (v: number | null) => void }) {
@@ -30,8 +29,7 @@ export default function BookDetailActions({ book }: { book: Book }) {
     <div className="flex flex-col gap-3">
       {savedBook ? (
         <>
-          <div className="flex items-center justify-between">
-            <StatusBadge status={savedBook.status} />
+          <div className="flex justify-end">
             <button
               onClick={() => removeBook(book.id)}
               className="text-sm text-green-600 hover:text-green-800 transition-colors"
