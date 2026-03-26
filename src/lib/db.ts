@@ -46,6 +46,16 @@ db.exec(`
     user_id    TEXT NOT NULL REFERENCES users(id),
     expires_at INTEGER NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS user_goals (
+    id         TEXT PRIMARY KEY,
+    user_id    TEXT NOT NULL REFERENCES users(id),
+    period     TEXT NOT NULL,
+    target     INTEGER NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(user_id, period)
+  );
 `);
 
 export default db;

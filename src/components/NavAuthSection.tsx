@@ -19,6 +19,12 @@ export default function NavAuthSection() {
         <>
           {user ? (
             <>
+              <Link
+                href="/goals"
+                className="text-sm font-medium text-[#e0d4cc] hover:text-[#f0eae5] transition-colors"
+              >
+                Goals
+              </Link>
               <button
                 onClick={logout}
                 className="text-sm font-medium text-[#e0d4cc] hover:text-[#f0eae5] transition-colors"
