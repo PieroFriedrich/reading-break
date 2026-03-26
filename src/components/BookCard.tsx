@@ -13,6 +13,7 @@ interface Props {
   onUpdateStatus: (bookId: string, status: ReadingStatus) => void;
   onUpdateRating?: (bookId: string, rating: number | null) => void;
   onUpdateProgress?: (bookId: string, pages: number | null) => void;
+  onUpdateFinishedAt?: (bookId: string, date: string | null) => void;
   onRemove: (bookId: string) => void;
 }
 
@@ -41,10 +42,11 @@ function StarRating({
   );
 }
 
-export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onRemove }: Props) {
+export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onUpdateFinishedAt, onRemove }: Props) {
   const isSaved = !!savedBook;
   const bookPageUrl = `/books/${book.id.replace('/works/', '')}`;
   const [pct, setPct] = useState(savedBook?.readingProgress ?? 0);
+  const today = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     setPct(savedBook?.readingProgress ?? 0);
@@ -97,6 +99,18 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
                   rating={savedBook.rating}
                   onRate={(value) => onUpdateRating(book.id, value)}
                 />
+              )}
+              {savedBook.status === 'FINISHED' && onUpdateFinishedAt && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-[#aa8a6e] dark:text-[#c5ae9b]">Finished on</span>
+                  <input
+                    type="date"
+                    defaultValue={savedBook.finishedAt?.slice(0, 10) ?? today}
+                    max={today}
+                    onBlur={(e) => onUpdateFinishedAt(book.id, e.target.value || null)}
+                    className="text-xs bg-transparent border border-[#d4b896] dark:border-[#7a5540] rounded px-1 py-0.5 text-[#4d352a] dark:text-[#f0eae5]"
+                  />
+                </div>
               )}
               {savedBook.status === 'READING' && onUpdateProgress && (
                 <div className="flex items-center gap-2">

@@ -15,6 +15,7 @@ db.pragma('journal_mode = WAL');
 try { db.exec('ALTER TABLE user_books ADD COLUMN rating INTEGER'); } catch {}
 try { db.exec('ALTER TABLE user_books ADD COLUMN reading_progress INTEGER'); } catch {}
 try { db.exec('UPDATE user_books SET reading_progress = NULL WHERE reading_progress > 100'); } catch {}
+try { db.exec('ALTER TABLE user_books ADD COLUMN finished_at TEXT'); } catch {}
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS user_books (

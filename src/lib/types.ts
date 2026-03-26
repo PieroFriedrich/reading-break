@@ -40,6 +40,7 @@ export interface UserBook {
   status: ReadingStatus;
   rating?: number;
   readingProgress?: number;
+  finishedAt?: string;
   createdAt: string;
   updatedAt: string;
 }

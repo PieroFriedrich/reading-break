@@ -6,7 +6,7 @@ import { useUserBooks } from '@/hooks/useUserBooks';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function Home() {
-  const { userBooks, saveBook, updateStatus, updateRating, updateProgress, removeBook } = useUserBooks();
+  const { userBooks, saveBook, updateStatus, updateRating, updateProgress, updateFinishedAt, removeBook } = useUserBooks();
   const { user, loading: authLoading } = useAuth();
 
   return (
@@ -24,6 +24,7 @@ export default function Home() {
         onUpdateStatus={updateStatus}
         onUpdateRating={updateRating}
         onUpdateProgress={updateProgress}
+        onUpdateFinishedAt={updateFinishedAt}
         onRemove={removeBook}
       />
     </div>

@@ -10,10 +10,11 @@ interface Props {
   onUpdateStatus: (bookId: string, status: ReadingStatus) => void;
   onUpdateRating: (bookId: string, rating: number | null) => void;
   onUpdateProgress: (bookId: string, pages: number | null) => void;
+  onUpdateFinishedAt: (bookId: string, date: string | null) => void;
   onRemove: (bookId: string) => void;
 }
 
-export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onRemove }: Props) {
+export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onUpdateFinishedAt, onRemove }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Book[]>([]);
   const [searching, setSearching] = useState(false);
@@ -94,6 +95,7 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdat
                   onUpdateStatus={onUpdateStatus}
                   onUpdateRating={onUpdateRating}
                   onUpdateProgress={onUpdateProgress}
+                  onUpdateFinishedAt={onUpdateFinishedAt}
                   onRemove={onRemove}
                 />
               ))}
@@ -122,6 +124,7 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdat
                   onUpdateStatus={onUpdateStatus}
                   onUpdateRating={onUpdateRating}
                   onUpdateProgress={onUpdateProgress}
+                  onUpdateFinishedAt={onUpdateFinishedAt}
                   onRemove={onRemove}
                 />
               ))}

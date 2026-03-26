@@ -23,9 +23,10 @@ function StarRating({ rating, onRate }: { rating?: number; onRate: (v: number | 
 }
 
 export default function BookDetailActions({ book }: { book: Book }) {
-  const { userBooks, saveBook, updateStatus, updateRating, updateProgress, removeBook } = useUserBooks();
+  const { userBooks, saveBook, updateStatus, updateRating, updateProgress, updateFinishedAt, removeBook } = useUserBooks();
   const savedBook = userBooks.find((b) => b.bookId === book.id);
   const [pct, setPct] = useState(savedBook?.readingProgress ?? 0);
+  const today = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     setPct(savedBook?.readingProgress ?? 0);
@@ -49,6 +50,18 @@ export default function BookDetailActions({ book }: { book: Book }) {
               rating={savedBook.rating}
               onRate={(value) => updateRating(book.id, value)}
             />
+          )}
+          {savedBook.status === 'FINISHED' && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-[#aa8a6e] dark:text-[#c5ae9b]">Finished on</span>
+              <input
+                type="date"
+                defaultValue={savedBook.finishedAt?.slice(0, 10) ?? today}
+                max={today}
+                onBlur={(e) => updateFinishedAt(book.id, e.target.value || null)}
+                className="text-sm bg-transparent border border-[#d4b896] dark:border-[#7a5540] rounded px-2 py-0.5 text-[#4d352a] dark:text-[#f0eae5]"
+              />
+            </div>
           )}
 
           {savedBook.status === 'READING' && (
