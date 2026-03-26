@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
 import { useUserBooks } from '@/hooks/useUserBooks';
 import BookCard from '@/components/BookCard';
+import ReadingProgress from '@/components/ReadingProgress';
 
 const STATUS_TABS: { label: string; value: ReadingStatus | undefined }[] = [
   { label: 'All', value: undefined },
@@ -45,6 +46,8 @@ export default function MyBooksPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-[#4d352a] dark:text-[#e8ddd8]">My Books</h1>
+
+      <ReadingProgress userBooks={userBooks} />
 
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex gap-2 flex-wrap">
