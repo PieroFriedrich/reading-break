@@ -9,6 +9,7 @@ import {
   updateGuestBookStatus,
   updateGuestBookRating,
   updateGuestBookProgress,
+  updateGuestBookFinishedAt,
   removeGuestBook,
 } from '@/lib/guestBooks';
 
@@ -104,6 +105,22 @@ export function useUserBooks(statusFilter?: ReadingStatus) {
     [user]
   );
 
+  const updateFinishedAt = useCallback(
+    async (bookId: string, date: string | null) => {
+      setUserBooks((prev) => prev.map((b) => (b.bookId === bookId ? { ...b, finishedAt: date ?? undefined } : b)));
+      if (user) {
+        await fetch(`/api/user-books/${encodeURIComponent(bookId)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ finishedAt: date }),
+        });
+      } else {
+        updateGuestBookFinishedAt(bookId, date);
+      }
+    },
+    [user]
+  );
+
   const removeBook = useCallback(
     async (bookId: string) => {
       setUserBooks((prev) => prev.filter((b) => b.bookId !== bookId));
@@ -116,5 +133,5 @@ export function useUserBooks(statusFilter?: ReadingStatus) {
     [user]
   );
 
-  return { userBooks, loading: authLoading || loading, saveBook, updateStatus, updateRating, updateProgress, removeBook };
+  return { userBooks, loading: authLoading || loading, saveBook, updateStatus, updateRating, updateProgress, updateFinishedAt, removeBook };
 }

@@ -12,14 +12,20 @@ export async function PATCH(
   const { bookId } = await params;
   const decodedBookId = decodeURIComponent(bookId);
   const body = await request.json();
-  const { status, rating, readingProgress } = body;
+  const { status, rating, readingProgress, finishedAt } = body;
 
   const setClauses: string[] = ["updated_at = datetime('now')"];
   const values: unknown[] = [];
 
-  if (status !== undefined) { setClauses.push('status = ?'); values.push(status); }
+  if (status !== undefined) {
+    setClauses.push('status = ?');
+    values.push(status);
+    if (status === 'FINISHED') setClauses.push("finished_at = datetime('now')");
+    else setClauses.push('finished_at = NULL');
+  }
   if ('rating' in body) { setClauses.push('rating = ?'); values.push(rating ?? null); }
   if ('readingProgress' in body) { setClauses.push('reading_progress = ?'); values.push(readingProgress ?? null); }
+  if ('finishedAt' in body) { setClauses.push('finished_at = ?'); values.push(finishedAt ?? null); }
 
   values.push(user.id, decodedBookId);
 

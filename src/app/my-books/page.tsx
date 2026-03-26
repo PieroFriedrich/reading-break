@@ -27,7 +27,7 @@ function sortBooks(books: UserBook[], sortBy: SortBy): UserBook[] {
 export default function MyBooksPage() {
   const [activeFilter, setActiveFilter] = useState<ReadingStatus | undefined>(undefined);
   const [sortBy, setSortBy] = useState<SortBy>('date_added');
-  const { userBooks, loading, saveBook, updateStatus, updateRating, updateProgress, removeBook } = useUserBooks();
+  const { userBooks, loading, saveBook, updateStatus, updateRating, updateProgress, updateFinishedAt, removeBook } = useUserBooks();
 
   const counts = useMemo(() => {
     const map: Record<string, number> = {};
@@ -102,6 +102,7 @@ export default function MyBooksPage() {
                 onUpdateStatus={updateStatus}
                 onUpdateRating={updateRating}
                 onUpdateProgress={updateProgress}
+                onUpdateFinishedAt={updateFinishedAt}
                 onRemove={removeBook}
               />
             );

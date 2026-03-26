@@ -14,7 +14,7 @@ interface Props {
 export default function BookRecommendations({ subjects, author, currentBookId }: Props) {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const { userBooks, saveBook, updateStatus, updateRating, updateProgress, removeBook } = useUserBooks();
+  const { userBooks, saveBook, updateStatus, updateRating, updateProgress, updateFinishedAt, removeBook } = useUserBooks();
   const savedMap = new Map(userBooks.map((b) => [b.bookId, b]));
 
   useEffect(() => {
@@ -54,6 +54,7 @@ export default function BookRecommendations({ subjects, author, currentBookId }:
             onUpdateStatus={updateStatus}
             onUpdateRating={updateRating}
             onUpdateProgress={updateProgress}
+            onUpdateFinishedAt={updateFinishedAt}
             onRemove={removeBook}
           />
         ))}

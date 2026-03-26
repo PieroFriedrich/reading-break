@@ -43,8 +43,22 @@ export function addGuestBook(book: Book, status: ReadingStatus): UserBook {
 }
 
 export function updateGuestBookStatus(bookId: string, status: ReadingStatus): void {
+  const now = new Date().toISOString();
+  const books = getGuestBooks().map((b) => {
+    if (b.bookId !== bookId) return b;
+    return {
+      ...b,
+      status,
+      finishedAt: status === 'FINISHED' ? now : undefined,
+      updatedAt: now,
+    };
+  });
+  saveGuestBooks(books);
+}
+
+export function updateGuestBookFinishedAt(bookId: string, date: string | null): void {
   const books = getGuestBooks().map((b) =>
-    b.bookId === bookId ? { ...b, status, updatedAt: new Date().toISOString() } : b
+    b.bookId === bookId ? { ...b, finishedAt: date ?? undefined, updatedAt: new Date().toISOString() } : b
   );
   saveGuestBooks(books);
 }

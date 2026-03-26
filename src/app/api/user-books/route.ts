@@ -15,6 +15,7 @@ interface DbRow {
   status: string;
   rating: number | null;
   reading_progress: number | null;
+  finished_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -32,6 +33,7 @@ function rowToUserBook(row: DbRow): UserBook {
     status: row.status as ReadingStatus,
     rating: row.rating ?? undefined,
     readingProgress: row.reading_progress ?? undefined,
+    finishedAt: row.finished_at ?? undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
