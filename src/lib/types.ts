@@ -9,6 +9,7 @@ export interface OLSearchResult {
 
 export interface OLSearchResponse {
   docs: OLSearchResult[];
+  numFound?: number;
 }
 
 export interface Book {

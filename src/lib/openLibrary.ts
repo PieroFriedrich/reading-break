@@ -1,7 +1,7 @@
 import type { Book, BookDetail, OLSearchResponse } from './types';
 
-export async function getTrendingBooks(): Promise<Book[]> {
-  const url = 'https://openlibrary.org/trending/daily.json?limit=20';
+export async function getTrendingBooks(limit = 100): Promise<Book[]> {
+  const url = `https://openlibrary.org/trending/daily.json?limit=${limit}`;
   const res = await fetch(url, { next: { revalidate: 3600 } });
   if (!res.ok) throw new Error('Failed to fetch trending books');
   const data = await res.json();
@@ -97,22 +97,25 @@ export async function getBooksByAuthor(author: string, limit = 6): Promise<Book[
   }
 }
 
-export async function searchBooks(query: string): Promise<Book[]> {
-  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&fields=key,title,author_name,publisher,first_publish_year,cover_i`;
+export async function searchBooks(query: string, offset = 0): Promise<{ books: Book[]; total: number }> {
+  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=20&offset=${offset}&fields=key,title,author_name,publisher,first_publish_year,cover_i`;
 
   const res = await fetch(url, { next: { revalidate: 0 } });
   if (!res.ok) throw new Error('Failed to fetch from Open Library');
 
   const data: OLSearchResponse = await res.json();
 
-  return data.docs.map((doc) => ({
-    id: doc.key,
-    title: doc.title,
-    author: doc.author_name?.[0],
-    publisher: doc.publisher?.[0],
-    publishDate: doc.first_publish_year?.toString(),
-    coverUrl: doc.cover_i
-      ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
-      : undefined,
-  }));
+  return {
+    books: data.docs.map((doc) => ({
+      id: doc.key,
+      title: doc.title,
+      author: doc.author_name?.[0],
+      publisher: doc.publisher?.[0],
+      publishDate: doc.first_publish_year?.toString(),
+      coverUrl: doc.cover_i
+        ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg`
+        : undefined,
+    })),
+    total: data.numFound ?? 0,
+  };
 }
