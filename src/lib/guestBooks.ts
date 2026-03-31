@@ -34,6 +34,7 @@ export function addGuestBook(book: Book, status: ReadingStatus): UserBook {
     bookAuthor: book.author,
     bookPublisher: book.publisher,
     bookPublishDate: book.publishDate,
+    bookSubjects: book.subjects,
     status,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

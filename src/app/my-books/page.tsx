@@ -1,10 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
 import { useUserBooks } from '@/hooks/useUserBooks';
 import BookCard from '@/components/BookCard';
+import Pagination from '@/components/Pagination';
 import ReadingProgress from '@/components/ReadingProgress';
+
+const PAGE_SIZE = 20;
 
 const STATUS_TABS: { label: string; value: ReadingStatus | undefined }[] = [
   { label: 'All', value: undefined },
@@ -28,6 +31,7 @@ function sortBooks(books: UserBook[], sortBy: SortBy): UserBook[] {
 export default function MyBooksPage() {
   const [activeFilter, setActiveFilter] = useState<ReadingStatus | undefined>(undefined);
   const [sortBy, setSortBy] = useState<SortBy>('date_added');
+  const [page, setPage] = useState(1);
   const { userBooks, loading, saveBook, updateStatus, updateRating, updateProgress, updateFinishedAt, removeBook } = useUserBooks();
 
   const counts = useMemo(() => {
@@ -42,6 +46,11 @@ export default function MyBooksPage() {
     const filtered = activeFilter ? userBooks.filter((b) => b.status === activeFilter) : userBooks;
     return sortBooks(filtered, sortBy);
   }, [userBooks, activeFilter, sortBy]);
+
+  const totalPages = Math.ceil(filteredBooks.length / PAGE_SIZE);
+  const pagedBooks = filteredBooks.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => { setPage(1); }, [activeFilter, sortBy]);
 
   return (
     <div className="space-y-6">
@@ -86,8 +95,9 @@ export default function MyBooksPage() {
       ) : filteredBooks.length === 0 ? (
         <p className="text-[#c5ae9b] dark:text-[#7a6055] text-sm">No books here yet.</p>
       ) : (
+        <div className="space-y-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {filteredBooks.map((ub) => {
+          {pagedBooks.map((ub) => {
             const book: Book = {
               id: ub.bookId,
               title: ub.bookTitle,
@@ -110,6 +120,8 @@ export default function MyBooksPage() {
               />
             );
           })}
+        </div>
+        <Pagination page={page} totalPages={totalPages} onChange={(p) => { setPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
         </div>
       )}
     </div>

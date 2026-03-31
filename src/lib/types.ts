@@ -9,6 +9,7 @@ export interface OLSearchResult {
 
 export interface OLSearchResponse {
   docs: OLSearchResult[];
+  numFound?: number;
 }
 
 export interface Book {
@@ -18,6 +19,7 @@ export interface Book {
   publisher?: string;
   publishDate?: string;
   coverUrl?: string;
+  subjects?: string[];
 }
 
 export interface BookDetail extends Book {
@@ -41,6 +43,7 @@ export interface UserBook {
   rating?: number;
   readingProgress?: number;
   finishedAt?: string;
+  bookSubjects?: string[];
   createdAt: string;
   updatedAt: string;
 }

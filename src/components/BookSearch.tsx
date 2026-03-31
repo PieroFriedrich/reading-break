@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
 import BookCard from './BookCard';
+import Pagination from './Pagination';
+
+const PAGE_SIZE = 20;
 
 interface Props {
   savedBooks: UserBook[];
@@ -17,9 +20,12 @@ interface Props {
 export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onUpdateFinishedAt, onRemove }: Props) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Book[]>([]);
+  const [searchTotal, setSearchTotal] = useState(0);
+  const [searchPage, setSearchPage] = useState(1);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
-  const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
+  const [allTrending, setAllTrending] = useState<Book[]>([]);
+  const [trendingPage, setTrendingPage] = useState(1);
   const [loadingTrending, setLoadingTrending] = useState(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -29,39 +35,62 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdat
     fetch('/api/books/trending')
       .then((r) => r.json())
       .then((data) => {
-        setTrendingBooks(data.books ?? []);
+        setAllTrending(data.books ?? []);
         setLoadingTrending(false);
       })
       .catch(() => { setLoadingTrending(false); });
   }, []);
+
+  const fetchSearch = (q: string, page: number) => {
+    setSearching(true);
+    setError('');
+    fetch(`/api/books/search?q=${encodeURIComponent(q)}&page=${page}`)
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? 'Search failed');
+        setResults(data.books);
+        setSearchTotal(data.total ?? 0);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : 'Search failed');
+        setResults([]);
+        setSearchTotal(0);
+      })
+      .finally(() => setSearching(false));
+  };
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     if (query.trim().length < 2) {
       setResults([]);
+      setSearchTotal(0);
+      setSearchPage(1);
       setError('');
       return;
     }
 
-    debounceRef.current = setTimeout(async () => {
-      setSearching(true);
-      setError('');
-      try {
-        const res = await fetch(`/api/books/search?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error ?? 'Search failed');
-        setResults(data.books);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Search failed');
-        setResults([]);
-      } finally {
-        setSearching(false);
-      }
+    debounceRef.current = setTimeout(() => {
+      setSearchPage(1);
+      fetchSearch(query, 1);
     }, 400);
   }, [query]);
 
+  const handleSearchPageChange = (page: number) => {
+    setSearchPage(page);
+    fetchSearch(query, page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleTrendingPageChange = (page: number) => {
+    setTrendingPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const isSearching = query.trim().length >= 2;
+  const searchTotalPages = Math.ceil(searchTotal / PAGE_SIZE);
+  const trendingTotalPages = Math.ceil(allTrending.length / PAGE_SIZE);
+  const trendingBooks = allTrending.slice((trendingPage - 1) * PAGE_SIZE, trendingPage * PAGE_SIZE);
 
   return (
     <div className="space-y-6">
@@ -85,20 +114,23 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdat
       {isSearching ? (
         <>
           {results.length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {results.map((book) => (
-                <BookCard
-                  key={book.id}
-                  book={book}
-                  savedBook={savedMap.get(book.id)}
-                  onSave={onSave}
-                  onUpdateStatus={onUpdateStatus}
-                  onUpdateRating={onUpdateRating}
-                  onUpdateProgress={onUpdateProgress}
-                  onUpdateFinishedAt={onUpdateFinishedAt}
-                  onRemove={onRemove}
-                />
-              ))}
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {results.map((book) => (
+                  <BookCard
+                    key={book.id}
+                    book={book}
+                    savedBook={savedMap.get(book.id)}
+                    onSave={onSave}
+                    onUpdateStatus={onUpdateStatus}
+                    onUpdateRating={onUpdateRating}
+                    onUpdateProgress={onUpdateProgress}
+                    onUpdateFinishedAt={onUpdateFinishedAt}
+                    onRemove={onRemove}
+                  />
+                ))}
+              </div>
+              <Pagination page={searchPage} totalPages={searchTotalPages} onChange={handleSearchPageChange} />
             </div>
           )}
           {!searching && results.length === 0 && !error && (
@@ -129,6 +161,7 @@ export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdat
                 />
               ))}
             </div>
+            <Pagination page={trendingPage} totalPages={trendingTotalPages} onChange={handleTrendingPageChange} />
           </div>
         )
       )}
