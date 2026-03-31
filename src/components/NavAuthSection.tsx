@@ -8,12 +8,19 @@ export default function NavAuthSection() {
   const { user, loading, logout } = useAuth();
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2 sm:gap-4">
       <Link
         href="/my-books"
         className="text-sm font-medium text-[#e0d4cc] hover:text-[#f0eae5] transition-colors"
       >
-        {user ? `${user.username}'s books` : 'My Books'}
+        <span className="sm:hidden">My Books</span>
+        <span className="hidden sm:inline">{user ? `${user.username}'s books` : 'My Books'}</span>
+      </Link>
+      <Link
+        href="/explore"
+        className="text-sm font-medium text-[#e0d4cc] hover:text-[#f0eae5] transition-colors"
+      >
+        Explore
       </Link>
       {!loading && (
         <>
@@ -21,7 +28,7 @@ export default function NavAuthSection() {
             <>
               <Link
                 href="/goals"
-                className="text-sm font-medium text-[#e0d4cc] hover:text-[#f0eae5] transition-colors"
+                className="hidden sm:inline text-sm font-medium text-[#e0d4cc] hover:text-[#f0eae5] transition-colors"
               >
                 Goals
               </Link>
@@ -42,7 +49,7 @@ export default function NavAuthSection() {
               </Link>
               <Link
                 href="/signup"
-                className="text-sm font-medium bg-[#f0eae5] text-[#4d352a] hover:bg-white px-3 py-1 rounded-lg transition-colors"
+                className="hidden sm:inline text-sm font-medium bg-[#f0eae5] text-[#4d352a] hover:bg-white px-3 py-1 rounded-lg transition-colors"
               >
                 Sign up
               </Link>

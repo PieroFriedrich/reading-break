@@ -16,6 +16,7 @@ interface DbRow {
   rating: number | null;
   reading_progress: number | null;
   finished_at: string | null;
+  book_subjects: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -34,6 +35,7 @@ function rowToUserBook(row: DbRow): UserBook {
     rating: row.rating ?? undefined,
     readingProgress: row.reading_progress ?? undefined,
     finishedAt: row.finished_at ?? undefined,
+    bookSubjects: row.book_subjects ? JSON.parse(row.book_subjects) : undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -64,15 +66,16 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const { book, status } = body as {
-    book: { id: string; title: string; author?: string; publisher?: string; publishDate?: string; coverUrl?: string };
+    book: { id: string; title: string; author?: string; publisher?: string; publishDate?: string; coverUrl?: string; subjects?: string[] };
     status: ReadingStatus;
   };
 
   const id = crypto.randomUUID();
+  const bookSubjectsJson = book.subjects?.length ? JSON.stringify(book.subjects) : null;
 
   db.prepare(`
-    INSERT INTO user_books (id, user_id, book_id, book_title, book_cover, book_author, book_publisher, book_publish_date, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO user_books (id, user_id, book_id, book_title, book_cover, book_author, book_publisher, book_publish_date, status, book_subjects)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(user_id, book_id) DO UPDATE SET
       status = excluded.status,
       book_title = excluded.book_title,
@@ -80,8 +83,9 @@ export async function POST(request: NextRequest) {
       book_author = excluded.book_author,
       book_publisher = excluded.book_publisher,
       book_publish_date = excluded.book_publish_date,
+      book_subjects = COALESCE(excluded.book_subjects, book_subjects),
       updated_at = datetime('now')
-  `).run(id, user.id, book.id, book.title, book.coverUrl ?? null, book.author ?? null, book.publisher ?? null, book.publishDate ?? null, status);
+  `).run(id, user.id, book.id, book.title, book.coverUrl ?? null, book.author ?? null, book.publisher ?? null, book.publishDate ?? null, status, bookSubjectsJson);
 
   const row = db
     .prepare('SELECT * FROM user_books WHERE user_id = ? AND book_id = ?')
