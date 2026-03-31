@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${geist.className} bg-[#f7f2ef] dark:bg-[#1c1410] min-h-screen`}>
         <AuthProvider>
-        <header className="bg-[#8d6548] border-b border-[#7a5540] shadow-sm">
+        <header className="relative bg-[#8d6548] border-b border-[#7a5540] shadow-sm">
           <nav className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2 font-bold text-[#f0eae5] text-lg tracking-tight">
               <img src="/reading-break-logo.svg" alt="Reading Break logo" height={32} width={32} />
