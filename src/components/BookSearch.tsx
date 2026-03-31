@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import type { Book, ReadingStatus, UserBook } from '@/lib/types';
 import BookCard from './BookCard';
+import Pagination from './Pagination';
 
 const PAGE_SIZE = 20;
 
@@ -14,31 +15,6 @@ interface Props {
   onUpdateProgress: (bookId: string, pages: number | null) => void;
   onUpdateFinishedAt: (bookId: string, date: string | null) => void;
   onRemove: (bookId: string) => void;
-}
-
-function Pagination({ page, totalPages, onChange }: { page: number; totalPages: number; onChange: (p: number) => void }) {
-  if (totalPages <= 1) return null;
-  return (
-    <div className="flex items-center justify-center gap-2 pt-2">
-      <button
-        onClick={() => onChange(page - 1)}
-        disabled={page <= 1}
-        className="px-3 py-1.5 rounded-lg text-sm border border-[#ddd0c4] dark:border-[#3a2820] text-[#8d6548] dark:text-[#c5ae9b] disabled:opacity-40 hover:bg-[#f0eae5] dark:hover:bg-[#251a14] transition-colors"
-      >
-        ← Prev
-      </button>
-      <span className="text-sm text-[#aa8a6e] dark:text-[#957060]">
-        {page} / {totalPages}
-      </span>
-      <button
-        onClick={() => onChange(page + 1)}
-        disabled={page >= totalPages}
-        className="px-3 py-1.5 rounded-lg text-sm border border-[#ddd0c4] dark:border-[#3a2820] text-[#8d6548] dark:text-[#c5ae9b] disabled:opacity-40 hover:bg-[#f0eae5] dark:hover:bg-[#251a14] transition-colors"
-      >
-        Next →
-      </button>
-    </div>
-  );
 }
 
 export default function BookSearch({ savedBooks, onSave, onUpdateStatus, onUpdateRating, onUpdateProgress, onUpdateFinishedAt, onRemove }: Props) {
