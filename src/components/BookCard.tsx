@@ -53,7 +53,7 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
   }, [savedBook?.readingProgress]);
 
   return (
-    <div className="flex flex-col bg-[#f0eae5] dark:bg-[#8d6548] rounded-xl shadow-sm border border-[#ede3db] dark:border-[#7a5540] hover:shadow-md transition-shadow">
+    <div className="flex flex-col bg-[#f0eae5] dark:bg-[#8d6548] rounded-xl shadow-sm border border-[#7a5540] hover:shadow-md transition-shadow">
       <Link href={bookPageUrl} className="relative block w-full h-52 bg-[#f7f2ef] dark:bg-[#1c1410] flex items-center justify-center rounded-t-xl overflow-hidden">
         {book.coverUrl ? (
           <Image
@@ -68,12 +68,12 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
         )}
       </Link>
 
-      <div className="p-4 flex flex-col gap-2 flex-1">
+      <div className="p-4 flex flex-col gap-2 flex-1 bg-[#8d6548] rounded-b-xl">
         <Link href={bookPageUrl} className="block">
-          <h3 className="font-semibold text-[#4d352a] dark:text-[#f0eae5] text-sm leading-snug line-clamp-2 hover:underline">{book.title}</h3>
+          <h3 className="font-semibold text-[#f0eae5] text-sm leading-snug line-clamp-2 hover:underline">{book.title}</h3>
 
           {book.author && (
-            <p className="text-xs text-[#9a7559] dark:text-[#e0d4cc] line-clamp-1 mt-1">{book.author}</p>
+            <p className="text-xs text-[#e0d4cc] line-clamp-1 mt-1">{book.author}</p>
           )}
 
           <div className="flex flex-wrap gap-1 text-xs text-[#c5ae9b] dark:text-[#c5ae9b] mt-1">
@@ -102,13 +102,13 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
               )}
               {savedBook.status === 'FINISHED' && onUpdateFinishedAt && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#aa8a6e] dark:text-[#c5ae9b]">Finished on</span>
+                  <span className="text-xs text-[#c5ae9b]">Finished on</span>
                   <input
                     type="date"
                     defaultValue={savedBook.finishedAt?.slice(0, 10) ?? today}
                     max={today}
                     onBlur={(e) => onUpdateFinishedAt(book.id, e.target.value || null)}
-                    className="text-xs bg-transparent border border-[#d4b896] dark:border-[#7a5540] rounded px-1 py-0.5 text-[#4d352a] dark:text-[#f0eae5]"
+                    className="text-xs bg-transparent border border-[#7a5540] rounded px-1 py-0.5 text-[#f0eae5]"
                   />
                 </div>
               )}
@@ -124,7 +124,7 @@ export default function BookCard({ book, savedBook, onSave, onUpdateStatus, onUp
                       onTouchEnd={(e) => onUpdateProgress(book.id, Number((e.target as HTMLInputElement).value))}
                       className="flex-1 accent-green-500"
                     />
-                    <span className="text-xs text-[#aa8a6e] dark:text-[#c5ae9b] w-8 text-right">{pct}%</span>
+                    <span className="text-xs text-[#c5ae9b] w-8 text-right">{pct}%</span>
                 </div>
               )}
               <StatusSelector
