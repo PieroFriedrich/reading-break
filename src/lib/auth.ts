@@ -48,7 +48,7 @@ export function setSessionCookie(response: NextResponse, sessionId: string): voi
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
-    secure: process.env.NODE_ENV === 'production',
+    secure: false,
     maxAge: SESSION_DURATION_MS / 1000,
   });
 }
